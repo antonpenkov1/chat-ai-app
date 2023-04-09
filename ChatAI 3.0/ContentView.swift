@@ -7,82 +7,118 @@
 
 import SwiftUI
 import CoreData
+import OpenAISwift
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    @ObservedObject var viewModel = ViewModel()
+    @State private var messageText = ""
+    @State var messages: [String] = ["Welcome to ChatAI"]
+    
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        VStack {
+            HStack{
+                Text("ChatAI")
+                    .font(.system(size: 30, weight: .bold, design: .serif))
+                    .bold()
+                
+                Image(systemName: "message.circle")
+                    .font(.system(size: 40))
+                    .foregroundColor(.purple.opacity(0.8))
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            
+            ScrollView {
+                ForEach(messages, id: \.self) { message in
+                    if message.contains("[You]") {
+                        let newMessage = message.replacingOccurrences(of: "[You]", with: "")
+                        
+                        HStack{
+                            Spacer()
+                            
+                            ZStack{
+                                Text(newMessage)
+                                    .padding()
+                                    .font(.system(size: 15, weight: .light))
+                                    .foregroundColor(.white)
+                                    .background(.purple.opacity(0.8))
+                                    .background(.white)
+                                    .cornerRadius(25)
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 10)
+                            }
+                            
+                        }
+                    } else {
+                        HStack{
+                            ZStack {
+                                Text(message)
+                                    .padding()
+                                    .font(.system(size: 15, weight: .light))
+                                    .foregroundColor(.black)
+                                    .background(.white)
+                                    .cornerRadius(25)
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 10)
+                            }
+                            
+                            Spacer()
+                        }
                     }
+                }.rotationEffect(.degrees(180))
+            }.rotationEffect(.degrees(180))
+                .background(Image("mountainBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                    .clipped()
+                )
+            
+            HStack {
+                TextField("Type here", text: $messageText, axis: .vertical)
+                    .lineLimit(10)
+                    .padding()
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(25)
+                    .onSubmit {
+                        send()
+                    }
+                
+                Button {
+                    send()
+                } label: {
+                    Image(systemName: "paperplane.fill")
                 }
+                .padding()
+                .frame(width: 80, height: 50)
+                .font(.system(size: 26))
+                .foregroundColor(.white)
+                .background(.purple.opacity(0.8))
+                .cornerRadius(25)
             }
-            Text("Select an item")
+            .padding()
+        }
+        .onAppear {
+            viewModel.setup()
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+    
+    
+    func send() {
+        guard !messageText.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
         }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        
+        messages.append("[You]" + messageText)
+        viewModel.send(messageText: messageText) { response in
+            DispatchQueue.main.async {
+                self.messages.append(response)
+                self.messageText = ""
             }
         }
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView()
     }
 }

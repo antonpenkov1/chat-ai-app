@@ -13,6 +13,8 @@
 		D2BC86DE29E345A2009D060C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BC86DD29E345A2009D060C /* Preview Assets.xcassets */; };
 		D2BC86E029E345A2009D060C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BC86DF29E345A2009D060C /* Persistence.swift */; };
 		D2BC86E329E345A2009D060C /* ChatAI_3_0.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D2BC86E129E345A2009D060C /* ChatAI_3_0.xcdatamodeld */; };
+		D2BC86EC29E345BE009D060C /* OpenAISwift in Frameworks */ = {isa = PBXBuildFile; productRef = D2BC86EB29E345BE009D060C /* OpenAISwift */; };
+		D2BC86EE29E3463F009D060C /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BC86ED29E3463F009D060C /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		D2BC86DF29E345A2009D060C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D2BC86E229E345A2009D060C /* ChatAI_3_0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatAI_3_0.xcdatamodel; sourceTree = "<group>"; };
 		D2BC86E429E345A2009D060C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2BC86ED29E3463F009D060C /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2BC86EC29E345BE009D060C /* OpenAISwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +62,7 @@
 			children = (
 				D2BC86D629E345A1009D060C /* ChatAI_3_0App.swift */,
 				D2BC86D829E345A1009D060C /* ContentView.swift */,
+				D2BC86ED29E3463F009D060C /* ViewModel.swift */,
 				D2BC86DA29E345A2009D060C /* Assets.xcassets */,
 				D2BC86DF29E345A2009D060C /* Persistence.swift */,
 				D2BC86E429E345A2009D060C /* Info.plist */,
@@ -91,6 +96,9 @@
 			dependencies = (
 			);
 			name = "ChatAI 3.0";
+			packageProductDependencies = (
+				D2BC86EB29E345BE009D060C /* OpenAISwift */,
+			);
 			productName = "ChatAI 3.0";
 			productReference = D2BC86D329E345A1009D060C /* ChatAI 3.0.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +127,9 @@
 				Base,
 			);
 			mainGroup = D2BC86CA29E345A1009D060C;
+			packageReferences = (
+				D2BC86EA29E345BE009D060C /* XCRemoteSwiftPackageReference "OpenAISwift" */,
+			);
 			productRefGroup = D2BC86D429E345A1009D060C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -145,6 +156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2BC86EE29E3463F009D060C /* ViewModel.swift in Sources */,
 				D2BC86E029E345A2009D060C /* Persistence.swift in Sources */,
 				D2BC86D929E345A1009D060C /* ContentView.swift in Sources */,
 				D2BC86E329E345A2009D060C /* ChatAI_3_0.xcdatamodeld in Sources */,
@@ -347,6 +359,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D2BC86EA29E345BE009D060C /* XCRemoteSwiftPackageReference "OpenAISwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adamrushy/OpenAISwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D2BC86EB29E345BE009D060C /* OpenAISwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D2BC86EA29E345BE009D060C /* XCRemoteSwiftPackageReference "OpenAISwift" */;
+			productName = OpenAISwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		D2BC86E129E345A2009D060C /* ChatAI_3_0.xcdatamodeld */ = {
